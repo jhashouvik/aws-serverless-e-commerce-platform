@@ -1,6 +1,6 @@
-# Terraform scaffold for "Microservices SaaS App on Azure"
+# Terraform scaffold for "AWS Serverless E-commerce Platform"
 
-Generated from the architecture diagram (provider: azure). This is a
+Generated from the architecture diagram (provider: aws). This is a
 **starting scaffold**, not a finished production module -- it creates NEW
 network resources matching your diagram's groups (it doesn't import any
 existing VPCs/VNets), and has no knowledge of your IAM policies or naming
