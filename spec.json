@@ -1,0 +1,166 @@
+{
+  "title": "Microservices SaaS App on Azure",
+  "provider": "azure",
+  "direction": "LR",
+  "groups": [
+    {
+      "id": "vnet1",
+      "label": "VNet",
+      "parent": null
+    },
+    {
+      "id": "subnet_public",
+      "label": "Public Subnet",
+      "parent": "vnet1"
+    },
+    {
+      "id": "subnet_private",
+      "label": "Private Subnet",
+      "parent": "vnet1"
+    },
+    {
+      "id": "subnet_data",
+      "label": "Data Subnet",
+      "parent": "vnet1"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "user1",
+      "type": "user",
+      "label": "User",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "afd1",
+      "type": "cdn",
+      "label": "Azure Front Door",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "agw1",
+      "type": "load_balancer",
+      "label": "App Gateway WAF",
+      "group": "subnet_public",
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "container_apps",
+      "type": "compute.container",
+      "label": "Container Apps",
+      "group": "subnet_private",
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "sql1",
+      "type": "database.relational",
+      "label": "Azure SQL Primary",
+      "group": "subnet_data",
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "sql_failover",
+      "type": "database.relational",
+      "label": "Azure SQL Failover",
+      "group": "subnet_data",
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "redis1",
+      "type": "database.cache",
+      "label": "Cache for Redis",
+      "group": "subnet_data",
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "service_bus",
+      "type": "queue",
+      "label": "Service Bus",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "blob_storage",
+      "type": "storage.object",
+      "label": "Blob Storage",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "key_vault",
+      "type": "secrets",
+      "label": "Key Vault",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "user1",
+      "target": "afd1",
+      "label": "HTTPS",
+      "style": "solid"
+    },
+    {
+      "source": "afd1",
+      "target": "agw1",
+      "label": "HTTPS",
+      "style": "solid"
+    },
+    {
+      "source": "agw1",
+      "target": "container_apps",
+      "label": "HTTP",
+      "style": "solid"
+    },
+    {
+      "source": "container_apps",
+      "target": "sql1",
+      "label": "SQL Queries",
+      "style": "solid"
+    },
+    {
+      "source": "container_apps",
+      "target": "redis1",
+      "label": "Cache Access",
+      "style": "solid"
+    },
+    {
+      "source": "container_apps",
+      "target": "service_bus",
+      "label": "Messages",
+      "style": "solid"
+    },
+    {
+      "source": "container_apps",
+      "target": "blob_storage",
+      "label": "File Storage",
+      "style": "solid"
+    },
+    {
+      "source": "container_apps",
+      "target": "key_vault",
+      "label": "Secrets Access",
+      "style": "solid"
+    },
+    {
+      "source": "sql1",
+      "target": "sql_failover",
+      "label": "Failover",
+      "style": "solid"
+    }
+  ],
+  "show_legend": true
+}
