@@ -67,11 +67,11 @@
     },
     {
       "id": "ec2_auto1",
-      "type": "compute.vm",
-      "label": "EC2 Auto-scaling",
+      "type": "compute.serverless",
+      "label": "Lambda",
       "group": "private1",
-      "suggested_type": "compute.serverless",
-      "suggestion_reason": "Serverless compute scales automatically and reduces management overhead."
+      "suggested_type": null,
+      "suggestion_reason": null
     },
     {
       "id": "rds1",
