@@ -19,95 +19,156 @@ variable "tenant_id" {
   type        = string
 }
 
-# >>> archly:group:vnet1 >>>
-variable "vnet1_address_space" {
-  description = "Address space for VNet 'VNet'"
+# >>> archly:group:data1 >>>
+variable "data1_availability_zone" {
+  description = "Availability zone for subnet 'Data Subnet'"
+  type        = string
+}
+
+variable "data1_cidr_block" {
+  description = "CIDR block for subnet 'Data Subnet' (must not overlap sibling subnets)"
+  type        = string
+}
+# <<< archly:group:data1 <<<
+
+# >>> archly:group:private1 >>>
+variable "private1_availability_zone" {
+  description = "Availability zone for subnet 'Private Subnet'"
+  type        = string
+}
+
+variable "private1_cidr_block" {
+  description = "CIDR block for subnet 'Private Subnet' (must not overlap sibling subnets)"
+  type        = string
+}
+# <<< archly:group:private1 <<<
+
+# >>> archly:group:public1 >>>
+variable "public1_availability_zone" {
+  description = "Availability zone for subnet 'Public Subnet'"
+  type        = string
+}
+
+variable "public1_cidr_block" {
+  description = "CIDR block for subnet 'Public Subnet' (must not overlap sibling subnets)"
+  type        = string
+}
+# <<< archly:group:public1 <<<
+
+# >>> archly:group:vpc1 >>>
+variable "vpc1_cidr_block" {
+  description = "CIDR block for VPC 'VPC'"
   type        = string
   default     = "10.0.0.0/16"
 }
-# <<< archly:group:vnet1 <<<
+# <<< archly:group:vpc1 <<<
 
-# >>> archly:group:subnet_public >>>
-variable "subnet_public_address_prefix" {
-  description = "Address prefix for subnet 'Public Subnet' (must fall within the VNet's address space)"
-  type        = string
+# >>> archly:node:alb1 >>>
+variable "alb1_subnet_ids" {
+  description = "List of subnet ids to place the load balancer in"
+  type        = list(string)
+  default     = [aws_subnet.public1.id]
 }
-# <<< archly:group:subnet_public <<<
+# <<< archly:node:alb1 <<<
 
-# >>> archly:group:subnet_private >>>
-variable "subnet_private_address_prefix" {
-  description = "Address prefix for subnet 'Private Subnet' (must fall within the VNet's address space)"
-  type        = string
-}
-# <<< archly:group:subnet_private <<<
-
-# >>> archly:group:subnet_data >>>
-variable "subnet_data_address_prefix" {
-  description = "Address prefix for subnet 'Data Subnet' (must fall within the VNet's address space)"
-  type        = string
-}
-# <<< archly:group:subnet_data <<<
-
-# >>> archly:node:afd1 >>>
-variable "afd1_cdn_profile_name" {
-  description = "Name of an existing azurerm_cdn_profile"
-  type        = string
-}
-
-variable "afd1_origin_host_name" {
-  description = "Hostname of the origin this CDN serves"
-  type        = string
-}
-# <<< archly:node:afd1 <<<
-
-# >>> archly:node:container_apps >>>
-variable "container_apps_container_image" {
-  description = "Container image to deploy, e.g. myrepo/app:latest"
-  type        = string
-}
-
-variable "container_apps_environment_id" {
-  description = "Id of an existing Container Apps environment"
-  type        = string
-}
-# <<< archly:node:container_apps <<<
-
-# >>> archly:node:sql1 >>>
-variable "sql1_administrator_login" {
-  description = "Administrator login"
-  type        = string
-}
-
-variable "sql1_administrator_password" {
-  description = "Administrator password -- supply via TF_VAR_sql1_administrator_password, never commit"
+# >>> archly:node:cache1 >>>
+variable "cache1_auth_token" {
+  description = "Redis AUTH token -- supply via TF_VAR_cache1_auth_token, never commit"
   type        = string
   sensitive   = true
 }
-# <<< archly:node:sql1 <<<
 
-# >>> archly:node:sql_failover >>>
-variable "sql_failover_administrator_login" {
-  description = "Administrator login"
+variable "cache1_node_type" {
+  description = "ElastiCache node type"
+  type        = string
+  default     = "cache.t3.micro"
+}
+# <<< archly:node:cache1 <<<
+
+# >>> archly:node:cdn1 >>>
+variable "cdn1_origin_domain_name" {
+  description = "Domain name of the origin this CDN serves (ALB/S3/etc.)"
+  type        = string
+}
+# <<< archly:node:cdn1 <<<
+
+# >>> archly:node:dns1 >>>
+variable "dns1_domain_name" {
+  description = "Domain name managed by this zone, e.g. example.com"
+  type        = string
+}
+# <<< archly:node:dns1 <<<
+
+# >>> archly:node:ec2_auto1 >>>
+variable "ec2_auto1_ami" {
+  description = "AMI id to boot (region-specific, no safe default)"
   type        = string
 }
 
-variable "sql_failover_administrator_password" {
-  description = "Administrator password -- supply via TF_VAR_sql_failover_administrator_password, never commit"
+variable "ec2_auto1_instance_type" {
+  description = "EC2 instance type"
+  type        = string
+  default     = "t3.micro"
+}
+# <<< archly:node:ec2_auto1 <<<
+
+# >>> archly:node:lambda1 >>>
+variable "lambda1_execution_role_arn" {
+  description = "ARN of an existing IAM role with lambda execution permissions"
+  type        = string
+}
+
+variable "lambda1_handler" {
+  description = "Function handler entrypoint"
+  type        = string
+  default     = "index.handler"
+}
+
+variable "lambda1_package_s3_bucket" {
+  description = "S3 bucket containing the deployment package"
+  type        = string
+}
+
+variable "lambda1_package_s3_key" {
+  description = "S3 key of the deployment package zip"
+  type        = string
+}
+
+variable "lambda1_runtime" {
+  description = "Lambda runtime"
+  type        = string
+  default     = "nodejs20.x"
+}
+# <<< archly:node:lambda1 <<<
+
+# >>> archly:node:rds1 >>>
+variable "rds1_engine" {
+  description = "Database engine"
+  type        = string
+  default     = "postgres"
+}
+
+variable "rds1_instance_class" {
+  description = "RDS instance class"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "rds1_password" {
+  description = "Master password -- supply via TF_VAR_rds1_password, never commit"
   type        = string
   sensitive   = true
 }
-# <<< archly:node:sql_failover <<<
 
-# >>> archly:node:service_bus >>>
-variable "service_bus_servicebus_namespace_id" {
-  description = "Id of an existing Service Bus namespace"
+variable "rds1_username" {
+  description = "Master username"
   type        = string
 }
-# <<< archly:node:service_bus <<<
+# <<< archly:node:rds1 <<<
 
-# >>> archly:node:blob_storage >>>
-variable "blob_storage_storage_account_name" {
-  description = "Globally-unique storage account name (lowercase, no dashes)"
+# >>> archly:node:s3_images >>>
+variable "s3_images_bucket_name" {
+  description = "Globally-unique S3 bucket name"
   type        = string
 }
-# <<< archly:node:blob_storage <<<
+# <<< archly:node:s3_images <<<
