@@ -126,11 +126,14 @@ resource "aws_lb" "alb1" {
 # <<< archly:node:alb1 <<<
 
 # >>> archly:node:ec2_auto1 >>>
-# EC2 Auto-scaling (compute.vm) -- belongs to subnet 'Private Subnet' (see resource id 'private1' above; wire this resource's subnet/network args to it manually)
-resource "aws_instance" "ec2_auto1" {
-  ami           = var.ec2_auto1_ami
-  instance_type = var.ec2_auto1_instance_type
-  tags = { Name = "EC2 Auto-scaling" }
+# Lambda (compute.serverless) -- belongs to subnet 'Private Subnet' (see resource id 'private1' above; wire this resource's subnet/network args to it manually)
+resource "aws_lambda_function" "ec2_auto1" {
+  function_name = "ec2_auto1"
+  role          = var.ec2_auto1_execution_role_arn
+  handler       = var.ec2_auto1_handler
+  runtime       = var.ec2_auto1_runtime
+  s3_bucket     = var.ec2_auto1_package_s3_bucket
+  s3_key        = var.ec2_auto1_package_s3_key
 }
 # <<< archly:node:ec2_auto1 <<<
 
