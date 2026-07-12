@@ -1,16 +1,3 @@
-
-
-# >>> archly:node:cache1 >>>
-# Secrets manager entry for ElastiCache
-resource "aws_secretsmanager_secret" "cache1_auth" {
-  name = "cache1-cache-auth-token"
-}
-resource "aws_secretsmanager_secret_version" "cache1_auth" {
-  secret_id     = aws_secretsmanager_secret.cache1_auth.id
-  secret_string = var.cache1_auth_token
-}
-# <<< archly:node:cache1 <<<
-
 # >>> archly:node:rds1 >>>
 # Secrets manager entry for RDS Multi-AZ
 resource "aws_secretsmanager_secret" "rds1_credentials" {
@@ -25,3 +12,14 @@ resource "aws_secretsmanager_secret_version" "rds1_credentials" {
   })
 }
 # <<< archly:node:rds1 <<<
+
+# >>> archly:node:cache1 >>>
+# Secrets manager entry for ElastiCache
+resource "aws_secretsmanager_secret" "cache1_auth" {
+  name = "cache1-cache-auth-token"
+}
+resource "aws_secretsmanager_secret_version" "cache1_auth" {
+  secret_id     = aws_secretsmanager_secret.cache1_auth.id
+  secret_string = var.cache1_auth_token
+}
+# <<< archly:node:cache1 <<<
