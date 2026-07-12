@@ -1,27 +1,27 @@
 {
-  "title": "Microservices SaaS App on Azure",
-  "provider": "azure",
+  "title": "AWS Serverless E-commerce Platform",
+  "provider": "aws",
   "direction": "LR",
   "groups": [
     {
-      "id": "vnet1",
-      "label": "VNet",
+      "id": "vpc1",
+      "label": "VPC",
       "parent": null
     },
     {
-      "id": "subnet_public",
+      "id": "public1",
       "label": "Public Subnet",
-      "parent": "vnet1"
+      "parent": "vpc1"
     },
     {
-      "id": "subnet_private",
+      "id": "private1",
       "label": "Private Subnet",
-      "parent": "vnet1"
+      "parent": "vpc1"
     },
     {
-      "id": "subnet_data",
+      "id": "data1",
       "label": "Data Subnet",
-      "parent": "vnet1"
+      "parent": "vpc1"
     }
   ],
   "nodes": [
@@ -34,73 +34,97 @@
       "suggestion_reason": null
     },
     {
-      "id": "afd1",
+      "id": "dns1",
+      "type": "dns",
+      "label": "Route 53",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "cdn1",
       "type": "cdn",
-      "label": "Azure Front Door",
+      "label": "CloudFront",
       "group": null,
       "suggested_type": null,
       "suggestion_reason": null
     },
     {
-      "id": "agw1",
+      "id": "waf1",
+      "type": "firewall",
+      "label": "WAF",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "alb1",
       "type": "load_balancer",
-      "label": "App Gateway WAF",
-      "group": "subnet_public",
+      "label": "App Load Balancer",
+      "group": "public1",
       "suggested_type": null,
       "suggestion_reason": null
     },
     {
-      "id": "container_apps",
-      "type": "compute.container",
-      "label": "Container Apps",
-      "group": "subnet_private",
-      "suggested_type": null,
-      "suggestion_reason": null
+      "id": "ec2_auto1",
+      "type": "compute.vm",
+      "label": "EC2 Auto-scaling",
+      "group": "private1",
+      "suggested_type": "compute.serverless",
+      "suggestion_reason": "Serverless compute scales automatically and reduces management overhead."
     },
     {
-      "id": "sql1",
+      "id": "rds1",
       "type": "database.relational",
-      "label": "Azure SQL Primary",
-      "group": "subnet_data",
+      "label": "RDS Multi-AZ",
+      "group": "data1",
       "suggested_type": null,
       "suggestion_reason": null
     },
     {
-      "id": "sql_failover",
-      "type": "database.relational",
-      "label": "Azure SQL Failover",
-      "group": "subnet_data",
-      "suggested_type": null,
-      "suggestion_reason": null
-    },
-    {
-      "id": "redis1",
+      "id": "cache1",
       "type": "database.cache",
-      "label": "Cache for Redis",
-      "group": "subnet_data",
+      "label": "ElastiCache",
+      "group": "data1",
       "suggested_type": null,
       "suggestion_reason": null
     },
     {
-      "id": "service_bus",
+      "id": "queue1",
       "type": "queue",
-      "label": "Service Bus",
+      "label": "SQS",
       "group": null,
       "suggested_type": null,
       "suggestion_reason": null
     },
     {
-      "id": "blob_storage",
+      "id": "lambda1",
+      "type": "compute.serverless",
+      "label": "Lambda",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "dynamodb1",
+      "type": "database.nosql",
+      "label": "DynamoDB",
+      "group": null,
+      "suggested_type": null,
+      "suggestion_reason": null
+    },
+    {
+      "id": "s3_images",
       "type": "storage.object",
-      "label": "Blob Storage",
+      "label": "S3 Product Images",
       "group": null,
       "suggested_type": null,
       "suggestion_reason": null
     },
     {
-      "id": "key_vault",
-      "type": "secrets",
-      "label": "Key Vault",
+      "id": "monitor1",
+      "type": "monitoring",
+      "label": "CloudWatch",
       "group": null,
       "suggested_type": null,
       "suggestion_reason": null
@@ -109,56 +133,74 @@
   "edges": [
     {
       "source": "user1",
-      "target": "afd1",
-      "label": "HTTPS",
+      "target": "dns1",
+      "label": "DNS Query",
       "style": "solid"
     },
     {
-      "source": "afd1",
-      "target": "agw1",
-      "label": "HTTPS",
+      "source": "dns1",
+      "target": "cdn1",
+      "label": "Route Traffic",
       "style": "solid"
     },
     {
-      "source": "agw1",
-      "target": "container_apps",
-      "label": "HTTP",
+      "source": "cdn1",
+      "target": "waf1",
+      "label": "Content Delivery",
       "style": "solid"
     },
     {
-      "source": "container_apps",
-      "target": "sql1",
-      "label": "SQL Queries",
+      "source": "waf1",
+      "target": "alb1",
+      "label": "Secure Traffic",
       "style": "solid"
     },
     {
-      "source": "container_apps",
-      "target": "redis1",
+      "source": "alb1",
+      "target": "ec2_auto1",
+      "label": "Distribute Load",
+      "style": "solid"
+    },
+    {
+      "source": "ec2_auto1",
+      "target": "rds1",
+      "label": "Read/Write",
+      "style": "solid"
+    },
+    {
+      "source": "ec2_auto1",
+      "target": "cache1",
       "label": "Cache Access",
       "style": "solid"
     },
     {
-      "source": "container_apps",
-      "target": "service_bus",
-      "label": "Messages",
+      "source": "ec2_auto1",
+      "target": "queue1",
+      "label": "Queue Messages",
       "style": "solid"
     },
     {
-      "source": "container_apps",
-      "target": "blob_storage",
-      "label": "File Storage",
+      "source": "queue1",
+      "target": "lambda1",
+      "label": "Trigger",
       "style": "solid"
     },
     {
-      "source": "container_apps",
-      "target": "key_vault",
-      "label": "Secrets Access",
+      "source": "lambda1",
+      "target": "dynamodb1",
+      "label": "Data Access",
       "style": "solid"
     },
     {
-      "source": "sql1",
-      "target": "sql_failover",
-      "label": "Failover",
+      "source": "ec2_auto1",
+      "target": "s3_images",
+      "label": "Store/Retrieve Images",
+      "style": "solid"
+    },
+    {
+      "source": "ec2_auto1",
+      "target": "monitor1",
+      "label": "Send Metrics",
       "style": "solid"
     }
   ],
