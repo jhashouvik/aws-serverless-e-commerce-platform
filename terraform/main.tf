@@ -71,7 +71,7 @@ resource "azurerm_subnet" "subnet_data" {
 # <<< archly:group:subnet_data <<<
 
 # >>> archly:node:afd1 >>>
-# Azure Front Door (cdn)
+# CDN Profiles (cdn)
 resource "azurerm_cdn_endpoint" "afd1" {
   name                = "afd1"
   profile_name        = var.afd1_cdn_profile_name
