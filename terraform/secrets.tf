@@ -1,17 +1,27 @@
-# >>> archly:node:sql1 >>>
-# Secrets manager entry for Azure SQL Primary
-resource "azurerm_key_vault_secret" "sql1_password" {
-  name         = "sql1-db-password"
-  value        = var.sql1_administrator_password
-  key_vault_id = var.key_vault_id
-}
-# <<< archly:node:sql1 <<<
 
-# >>> archly:node:sql_failover >>>
-# Secrets manager entry for Azure SQL Failover
-resource "azurerm_key_vault_secret" "sql_failover_password" {
-  name         = "sql_failover-db-password"
-  value        = var.sql_failover_administrator_password
-  key_vault_id = var.key_vault_id
+
+# >>> archly:node:cache1 >>>
+# Secrets manager entry for ElastiCache
+resource "aws_secretsmanager_secret" "cache1_auth" {
+  name = "cache1-cache-auth-token"
 }
-# <<< archly:node:sql_failover <<<
+resource "aws_secretsmanager_secret_version" "cache1_auth" {
+  secret_id     = aws_secretsmanager_secret.cache1_auth.id
+  secret_string = var.cache1_auth_token
+}
+# <<< archly:node:cache1 <<<
+
+# >>> archly:node:rds1 >>>
+# Secrets manager entry for RDS Multi-AZ
+resource "aws_secretsmanager_secret" "rds1_credentials" {
+  name = "rds1-db-credentials"
+}
+resource "aws_secretsmanager_secret_version" "rds1_credentials" {
+  secret_id = aws_secretsmanager_secret.rds1_credentials.id
+  secret_string = jsonencode({
+    username = var.rds1_username
+    password = var.rds1_password
+    endpoint = aws_db_instance.rds1.endpoint
+  })
+}
+# <<< archly:node:rds1 <<<
