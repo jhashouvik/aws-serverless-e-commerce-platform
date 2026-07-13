@@ -66,12 +66,12 @@
       "suggestion_reason": null
     },
     {
-      "id": "ec2_auto1",
-      "type": "compute.serverless",
-      "label": "Lambda",
+      "id": "ec2_asg",
+      "type": "compute.vm",
+      "label": "EC2 Auto-scaling",
       "group": "private1",
-      "suggested_type": null,
-      "suggestion_reason": null
+      "suggested_type": "compute.serverless",
+      "suggestion_reason": "Serverless compute would scale automatically without managing EC2 instances."
     },
     {
       "id": "rds1",
@@ -134,47 +134,47 @@
     {
       "source": "user1",
       "target": "dns1",
-      "label": "DNS Query",
+      "label": "DNS",
       "style": "solid"
     },
     {
       "source": "dns1",
       "target": "cdn1",
-      "label": "Route Traffic",
+      "label": "CDN",
       "style": "solid"
     },
     {
       "source": "cdn1",
       "target": "waf1",
-      "label": "Content Delivery",
+      "label": "Security",
       "style": "solid"
     },
     {
       "source": "waf1",
       "target": "alb1",
-      "label": "Secure Traffic",
+      "label": "HTTPS",
       "style": "solid"
     },
     {
       "source": "alb1",
-      "target": "ec2_auto1",
-      "label": "Distribute Load",
+      "target": "ec2_asg",
+      "label": "HTTP",
       "style": "solid"
     },
     {
-      "source": "ec2_auto1",
+      "source": "ec2_asg",
       "target": "rds1",
-      "label": "Read/Write",
+      "label": "SQL Queries",
       "style": "solid"
     },
     {
-      "source": "ec2_auto1",
+      "source": "ec2_asg",
       "target": "cache1",
       "label": "Cache Access",
       "style": "solid"
     },
     {
-      "source": "ec2_auto1",
+      "source": "ec2_asg",
       "target": "queue1",
       "label": "Queue Messages",
       "style": "solid"
@@ -188,20 +188,32 @@
     {
       "source": "lambda1",
       "target": "dynamodb1",
-      "label": "Data Access",
+      "label": "DB Access",
       "style": "solid"
     },
     {
-      "source": "ec2_auto1",
+      "source": "lambda1",
       "target": "s3_images",
-      "label": "Store/Retrieve Images",
+      "label": "Image Access",
       "style": "solid"
     },
     {
-      "source": "ec2_auto1",
-      "target": "monitor1",
-      "label": "Send Metrics",
-      "style": "solid"
+      "source": "monitor1",
+      "target": "ec2_asg",
+      "label": "Monitor",
+      "style": "dashed"
+    },
+    {
+      "source": "monitor1",
+      "target": "rds1",
+      "label": "Monitor",
+      "style": "dashed"
+    },
+    {
+      "source": "monitor1",
+      "target": "lambda1",
+      "label": "Monitor",
+      "style": "dashed"
     }
   ],
   "show_legend": true
