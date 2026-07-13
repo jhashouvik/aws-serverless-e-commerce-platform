@@ -70,34 +70,18 @@ variable "alb1_subnet_ids" {
 }
 # <<< archly:node:alb1 <<<
 
-# >>> archly:node:ec2_auto1 >>>
-variable "ec2_auto1_execution_role_arn" {
-  description = "ARN of an existing IAM role with lambda execution permissions"
+# >>> archly:node:ec2_asg >>>
+variable "ec2_asg_ami" {
+  description = "AMI id to boot (region-specific, no safe default)"
   type        = string
 }
 
-variable "ec2_auto1_handler" {
-  description = "Function handler entrypoint"
+variable "ec2_asg_instance_type" {
+  description = "EC2 instance type"
   type        = string
-  default     = "index.handler"
+  default     = "t3.micro"
 }
-
-variable "ec2_auto1_package_s3_bucket" {
-  description = "S3 bucket containing the deployment package"
-  type        = string
-}
-
-variable "ec2_auto1_package_s3_key" {
-  description = "S3 key of the deployment package zip"
-  type        = string
-}
-
-variable "ec2_auto1_runtime" {
-  description = "Lambda runtime"
-  type        = string
-  default     = "nodejs20.x"
-}
-# <<< archly:node:ec2_auto1 <<<
+# <<< archly:node:ec2_asg <<<
 
 # >>> archly:node:rds1 >>>
 variable "rds1_engine" {
