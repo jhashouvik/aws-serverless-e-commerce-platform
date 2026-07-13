@@ -15,9 +15,9 @@ output "alb1_dns_name" {
 # <<< archly:node:alb1 <<<
 
 # >>> archly:node:ec2_asg >>>
-output "ec2_asg_id" {
-  description = "Instance id"
-  value       = aws_instance.ec2_asg.id
+output "ec2_asg_arn" {
+  description = "Function ARN"
+  value       = aws_lambda_function.ec2_asg.arn
   sensitive   = false
 }
 # <<< archly:node:ec2_asg <<<
